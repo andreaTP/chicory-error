@@ -40,8 +40,8 @@ public class Main {
             List.of(ValueType.I32, ValueType.I32),
             List.of(),
             (Instance instance, long... args) -> { // decompiled is: console_log(13, 0);
-                var len = (int) args[0];
-                var offset = (int) args[1];
+                var offset = (int) args[0];
+                var len = (int) args[1];
                 var message = instance.memory().readString(offset, len);
                 System.out.println(message);
                 return null;

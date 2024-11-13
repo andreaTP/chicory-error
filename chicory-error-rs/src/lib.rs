@@ -22,4 +22,20 @@ pub extern "C" fn logIt() {
     }
 }
 
+#[no_mangle]
+pub extern "C" fn hello_world_reversed() {
+    let reversed: String = HELLO_WORLD.chars().rev().collect();
+    let reversed_bytes = reversed.as_bytes();
+
+    let ptr = reversed_bytes.as_ptr() as i32;
+    let len = reversed_bytes.len() as i32;
+
+    unsafe {
+        log(
+            ptr,
+            len,
+        )
+    }
+}
+
 static HELLO_WORLD: &str = "Hello, World!";

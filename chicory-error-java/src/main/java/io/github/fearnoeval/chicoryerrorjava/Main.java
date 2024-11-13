@@ -1,6 +1,5 @@
 package io.github.fearnoeval.chicoryerrorjava;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,14 +25,15 @@ public class Main {
         final var wasmPath = Paths.get("../chicory-error-rs/target/wasm32-unknown-unknown/release/chicory_error_rs.wasm");
         final var wasmBytes = Main.readAllBytes(wasmPath);
 
-        runHostFunctionExample(wasmBytes);
+        runHostFunctionExample(wasmBytes, "logIt");
+        runHostFunctionExample(wasmBytes, "hello_world_reversed");
     }
 
     /**
      * <li><a href="https://chicory.dev/docs/usage/host-functions">Chicory docs: Guests and Hosts</a></li>
-     * <li>The only modification is the call to {@link com.dylibso.chicory.wasm.Parser#parse}</li>
+     * <li>The only modifications are the call to {@link Parser#parse} and the call to {@link Instance#export}</li>
      */
-    public static final void runHostFunctionExample(final byte[] wasmBytes) {
+    public static final void runHostFunctionExample(final byte[] wasmBytes, String guestFnName) {
         var func = new HostFunction(
             "console",
             "log",
@@ -52,7 +52,7 @@ public class Main {
         // registers `console.log` in the store
         store.addFunction(func);
         var instance = store.instantiate("logger", Parser.parse(wasmBytes));
-        var logIt = instance.export("logIt");
-        logIt.apply();
+        var exportFn = instance.export(guestFnName);
+        exportFn.apply();
     }
 }
